@@ -1,0 +1,34 @@
+# RedisInsight Docker Image
+# Panel de gestión web para Redis
+
+FROM redislabs/redisinsight:latest
+
+# Metadatos
+LABEL maintainer="AKS Ecosystem"
+LABEL description="RedisInsight - Panel de gestión web para Redis"
+LABEL version="1.0"
+
+# Variables de entorno
+ENV REDISINSIGHT_HOST=redis-db
+ENV REDISINSIGHT_PORT=6379
+ENV REDISINSIGHT_PASSWORD=redis123
+ENV REDISINSIGHT_DB=0
+ENV REDISINSIGHT_NAME="Redis Local"
+ENV REDISINSIGHT_USERNAME=default
+ENV REDISINSIGHT_AUTH=redis123
+
+# Configurar RedisInsight
+ENV RI_APP_HOST=0.0.0.0
+ENV RI_APP_PORT=8001
+ENV RI_APP_LOG_LEVEL=info
+ENV RI_APP_DEBUG=false
+
+# Exponer puerto
+EXPOSE 8001
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost:8001/health || exit 1
+
+# Comando por defecto
+CMD ["redisinsight"]

@@ -1,0 +1,40 @@
+# Prometheus Configuration for Redis
+# Configuración de Prometheus para monitoreo de Redis
+
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+  external_labels:
+    cluster: 'redis-docker'
+    replica: 'prometheus-1'
+
+rule_files:
+  - "rules/*.yml"
+
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+          - alertmanager:9093
+
+scrape_configs:
+  # Prometheus self-monitoring
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+    scrape_interval: 5s
+    metrics_path: /metrics
+
+  # Redis Exporter
+  - job_name: 'redis'
+    static_configs:
+      - targets: ['redis-exporter:9121']
+    scrape_interval: 10s
+    metrics_path: /metrics
+
+  # Redis Replica Exporter (if enabled)
+  - job_name: 'redis-replica'
+    static_configs:
+      - targets: ['redis-replica-exporter:9122']
+    scrape_interval: 10s
+    metrics_path: /metrics

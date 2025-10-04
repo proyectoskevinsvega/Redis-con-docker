@@ -1,0 +1,30 @@
+# Grafana Data Sources Configuration for Redis
+# Configuración de fuentes de datos para Grafana
+
+apiVersion: 1
+
+datasources:
+  - name: Prometheus
+    type: prometheus
+    access: proxy
+    url: http://prometheus:9090
+    isDefault: true
+    editable: true
+    jsonData:
+      httpMethod: POST
+      queryTimeout: 60s
+      timeInterval: 15s
+
+  - name: Redis
+    type: redis
+    access: proxy
+    url: redis-db:6379
+    database: 0
+    user: default
+    secureJsonData:
+      password: redis123
+    jsonData:
+      sslmode: disable
+      maxOpenConns: 0
+      maxIdleConns: 2
+      connMaxLifetime: 14400

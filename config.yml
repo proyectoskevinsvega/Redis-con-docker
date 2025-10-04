@@ -1,0 +1,108 @@
+# Redis Docker Configuration
+# Configuración para habilitar/deshabilitar características
+
+# Configuración básica
+basic:
+  redis:
+    enabled: true
+    version: "7.0"
+    port: 6379
+    password: "redis123"
+    databases: 16
+    maxmemory: "256mb"
+    maxmemory_policy: "allkeys-lru"
+  
+  redisinsight:
+    enabled: true
+    port: 8001
+    username: "default"
+    password: "redis123"
+
+# Configuración de monitoreo
+monitoring:
+  enabled: true
+  prometheus:
+    enabled: true
+    port: 9090
+    retention: "15d"
+  
+  grafana:
+    enabled: true
+    port: 3000
+    admin_user: "admin"
+    admin_password: "admin123"
+  
+  exporters:
+    redis_exporter:
+      enabled: true
+      port: 9121
+
+# Configuración de clustering
+clustering:
+  enabled: false  # Cambiar a true para habilitar clustering
+  mode: "standalone"  # standalone, cluster, sentinel
+  nodes: 1
+  load_balancer:
+    enabled: false
+    port: 6379
+    algorithm: "round_robin"
+
+# Configuración de backup
+backup:
+  enabled: true
+  schedule: "0 2 * * *"  # Daily at 2 AM
+  retention_days: 7
+  compression: true
+  encryption: false
+
+# Configuración de seguridad
+security:
+  ssl:
+    enabled: false
+    cert_file: "/etc/ssl/certs/redis.crt"
+    key_file: "/etc/ssl/private/redis.key"
+  
+  network:
+    allowed_ips: ["0.0.0.0/0"]
+    denied_ips: []
+  
+  authentication:
+    method: "password"
+    password: "redis123"
+
+# Configuración de performance
+performance:
+  maxmemory: "256mb"
+  maxmemory_policy: "allkeys-lru"
+  maxmemory_samples: 5
+  tcp_keepalive: 300
+  tcp_backlog: 511
+  timeout: 0
+
+# Configuración de logging
+logging:
+  level: "notice"
+  logfile: "/var/log/redis/redis.log"
+  syslog_enabled: false
+
+# Configuración de alertas
+alerts:
+  enabled: true
+  email:
+    enabled: false
+    smtp_server: "localhost"
+    smtp_port: 587
+    username: ""
+    password: ""
+    from: "alerts@redis.local"
+    to: ["admin@redis.local"]
+  
+  slack:
+    enabled: false
+    webhook_url: ""
+    channel: "#alerts"
+  
+  webhook:
+    enabled: false
+    url: ""
+    timeout: 10

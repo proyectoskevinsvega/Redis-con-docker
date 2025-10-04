@@ -1,0 +1,44 @@
+# Redis Docker Image
+# Basado en Redis 7.0 oficial con configuraciones personalizadas
+
+FROM redis:7.0-alpine
+
+# Metadatos
+LABEL maintainer="AKS Ecosystem"
+LABEL description="Redis 7.0 con configuraciones personalizadas para desarrollo"
+LABEL version="1.0"
+
+# Variables de entorno
+ENV REDIS_PASSWORD=redis123
+ENV REDIS_PORT=6379
+ENV REDIS_DATABASES=16
+ENV REDIS_MAXMEMORY=256mb
+ENV REDIS_MAXMEMORY_POLICY=allkeys-lru
+
+# Instalar herramientas adicionales
+RUN apk add --no-cache \
+    curl \
+    vim \
+    nano \
+    htop \
+    redis-tools \
+    bash
+
+# Crear directorio para scripts de inicialización
+RUN mkdir -p /usr/local/bin/redis-init
+
+# Copiar scripts de inicialización
+COPY init-scripts/ /usr/local/bin/redis-init/
+
+# Configurar permisos
+RUN chmod +x /usr/local/bin/redis-init/*.sh
+
+# Exponer puerto
+EXPOSE 6379
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD redis-cli -a $REDIS_PASSWORD ping || exit 1
+
+# Comando por defecto
+CMD ["redis-server", "/usr/local/etc/redis/redis.conf"]
