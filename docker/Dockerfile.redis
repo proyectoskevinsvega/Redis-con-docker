@@ -21,7 +21,7 @@ RUN apk add --no-cache \
     vim \
     nano \
     htop \
-    redis-tools \
+    redis \
     bash
 
 # Crear directorio para scripts de inicialización
